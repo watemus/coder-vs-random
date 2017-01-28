@@ -1,16 +1,18 @@
 object FormMain: TFormMain
-  Left = 317
+  Left = 165
   Height = 700
-  Top = 139
+  Top = 88
   Width = 1000
   Caption = 'Coder vs Random'
   ClientHeight = 700
   ClientWidth = 1000
+  Color = 5258796
   Constraints.MaxHeight = 700
   Constraints.MaxWidth = 1000
   Constraints.MinHeight = 500
   Constraints.MinWidth = 1000
   OnCreate = FormCreate
+  OnMouseMove = imgGameMouseMove
   LCLVersion = '1.6.0.4'
   object pnlShop: TPanel
     Left = 0
@@ -18,7 +20,17 @@ object FormMain: TFormMain
     Top = 500
     Width = 1000
     Align = alBottom
+    ClientHeight = 200
+    ClientWidth = 1000
     TabOrder = 0
+    object pnlConsole: TListBox
+      Left = 432
+      Height = 80
+      Top = 40
+      Width = 508
+      ItemHeight = 0
+      TabOrder = 0
+    end
   end
   object imgGame: TImage
     Left = 0
@@ -26,8 +38,13 @@ object FormMain: TFormMain
     Top = 0
     Width = 1000
     Align = alClient
+    OnMouseLeave = imgGameMouseLeave
+    OnMouseMove = imgGameMouseMove
   end
   object timerRender: TTimer
+    Interval = 10
     OnTimer = timerRenderTimer
+    left = 24
+    top = 8
   end
 end

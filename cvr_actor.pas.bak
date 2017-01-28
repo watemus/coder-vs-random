@@ -1,0 +1,20 @@
+unit cvr_actor;
+
+{$mode objfpc}{$H+}
+
+interface
+
+uses
+  Classes, SysUtils, ExtCtrls;
+
+type
+  TActor = class
+    public
+      actorTimer: TTimer;
+      procedure update();
+  end;
+
+implementation
+
+end.
+
