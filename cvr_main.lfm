@@ -1,0 +1,33 @@
+object FormMain: TFormMain
+  Left = 282
+  Height = 700
+  Top = 106
+  Width = 1000
+  Caption = 'Coder vs Random'
+  ClientHeight = 700
+  ClientWidth = 1000
+  Constraints.MaxHeight = 700
+  Constraints.MaxWidth = 1000
+  Constraints.MinHeight = 500
+  Constraints.MinWidth = 1000
+  OnCreate = FormCreate
+  LCLVersion = '1.6.0.4'
+  object pnlShop: TPanel
+    Left = 0
+    Height = 200
+    Top = 500
+    Width = 1000
+    Align = alBottom
+    TabOrder = 0
+  end
+  object imgGame: TImage
+    Left = 0
+    Height = 500
+    Top = 0
+    Width = 1000
+    Align = alClient
+  end
+  object timerRender: TTimer
+    OnTimer = timerRenderTimer
+  end
+end

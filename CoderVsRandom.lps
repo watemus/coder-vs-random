@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <ProjectSession>
+    <PathDelim Value="\"/>
+    <Version Value="9"/>
+    <BuildModes Active="Default"/>
+    <Units Count="2">
+      <Unit0>
+        <Filename Value="CoderVsRandom.lpr"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <WindowIndex Value="-1"/>
+        <TopLine Value="-1"/>
+        <CursorPos X="-1" Y="-1"/>
+        <UsageCount Value="20"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="cvr_main.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="FormMain"/>
+        <ResourceBaseClass Value="Form"/>
+        <IsVisibleTab Value="True"/>
+        <CursorPos X="29" Y="46"/>
+        <UsageCount Value="20"/>
+        <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
+      </Unit1>
+    </Units>
+    <JumpHistory Count="9" HistoryIndex="8">
+      <Position1>
+        <Filename Value="cvr_main.pas"/>
+        <Caret Line="9" Column="42"/>
+      </Position1>
+      <Position2>
+        <Filename Value="cvr_main.pas"/>
+        <Caret Line="38" Column="3" TopLine="4"/>
+      </Position2>
+      <Position3>
+        <Filename Value="cvr_main.pas"/>
+        <Caret Line="40" Column="10" TopLine="11"/>
+      </Position3>
+      <Position4>
+        <Filename Value="cvr_main.pas"/>
+        <Caret Line="54" Column="74" TopLine="21"/>
+      </Position4>
+      <Position5>
+        <Filename Value="cvr_main.pas"/>
+        <Caret Line="38" Column="7" TopLine="22"/>
+      </Position5>
+      <Position6>
+        <Filename Value="cvr_main.pas"/>
+        <Caret Line="42" Column="11" TopLine="28"/>
+      </Position6>
+      <Position7>
+        <Filename Value="cvr_main.pas"/>
+        <Caret Line="36" Column="55" TopLine="19"/>
+      </Position7>
+      <Position8>
+        <Filename Value="cvr_main.pas"/>
+        <Caret Line="41" Column="21" TopLine="22"/>
+      </Position8>
+      <Position9>
+        <Filename Value="cvr_main.pas"/>
+        <Caret Line="59" Column="13" TopLine="30"/>
+      </Position9>
+    </JumpHistory>
+  </ProjectSession>
+</CONFIG>
