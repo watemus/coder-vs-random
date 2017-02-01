@@ -1,7 +1,7 @@
 object FormMain: TFormMain
-  Left = 145
+  Left = 203
   Height = 700
-  Top = 84
+  Top = 93
   Width = 1000
   Caption = 'Coder vs Random'
   ClientHeight = 700
@@ -11,7 +11,9 @@ object FormMain: TFormMain
   Constraints.MaxWidth = 1000
   Constraints.MinHeight = 500
   Constraints.MinWidth = 1000
+  KeyPreview = True
   OnCreate = FormCreate
+  OnKeyUp = FormKeyUp
   LCLVersion = '1.6.0.4'
   object pnlShop: TPanel
     Left = 0
@@ -19,17 +21,7 @@ object FormMain: TFormMain
     Top = 500
     Width = 1000
     Align = alBottom
-    ClientHeight = 200
-    ClientWidth = 1000
     TabOrder = 0
-    object pnlConsole: TListBox
-      Left = 432
-      Height = 80
-      Top = 40
-      Width = 508
-      ItemHeight = 0
-      TabOrder = 0
-    end
   end
   object imgGame: TImage
     Left = 0
@@ -38,9 +30,19 @@ object FormMain: TFormMain
     Width = 1000
     Align = alClient
     OnMouseDown = imgGameMouseDown
+    OnMouseEnter = imgGameMouseEnter
     OnMouseLeave = imgGameMouseLeave
     OnMouseMove = imgGameMouseMove
     OnMouseUp = imgGameMouseUp
+  end
+  object pnlConsole: TListBox
+    Left = 304
+    Height = 700
+    Top = 0
+    Width = 696
+    ItemHeight = 0
+    TabOrder = 1
+    Visible = False
   end
   object timerRender: TTimer
     Interval = 10

@@ -5,7 +5,7 @@ unit cvr_actor;
 interface
 
 uses
-  Classes, SysUtils, ExtCtrls;
+  Classes, SysUtils, ExtCtrls, Forms;
 
 type
 
@@ -14,12 +14,19 @@ type
   TActor = class
     public
       actorTimer: TTimer;
+      constructor create(f: TForm); virtual;
       procedure update();
+      function
   end;
 
 implementation
 
 { TActor }
+
+constructor TActor.create(f: TForm);
+begin
+  actorTimer := TTimer.create(f);
+end;
 
 procedure TActor.update;
 begin

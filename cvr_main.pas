@@ -19,8 +19,10 @@ type
     pnlShop: TPanel;
     timerRender: TTimer;
     procedure FormCreate(Sender: TObject);
+    procedure FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure imgGameMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
+    procedure imgGameMouseEnter(Sender: TObject);
     procedure imgGameMouseLeave(Sender: TObject);
     procedure imgGameMouseMove(Sender: TObject; Shift: TShiftState; X,
       Y: Integer);
@@ -39,6 +41,7 @@ var
   map: TMap;
   isRightMouseDown, isLeftMouseDown: Boolean;
   isRightMouseUp, isLeftMouseUp: Boolean;
+  isMouseIn: Boolean;
 
 implementation
 
@@ -74,12 +77,15 @@ begin
   i := 0;
   imgGame.canvas.pen.color := RGBToColor(149, 165, 166);
   imgGame.canvas.brush.color := RGBToColor(149, 165, 166);
-  imgGame.Canvas.Rectangle(
-    mousePosX - (map.getCubeSize() div 2),
-    map.getPixelByY(map.getYByPixel(mousePosY)),
-    mousePosX + (map.getCubeSize() div 2),
-    map.getPixelByY(map.getYByPixel(mousePosY)) + map.getCubeSize()
-  );
+  if (isMouseIn) then
+  begin
+    imgGame.Canvas.Rectangle(
+      mousePosX - (map.getCubeSize() div 2),
+      map.getPixelByY(map.getYByPixel(mousePosY)),
+      mousePosX + (map.getCubeSize() div 2),
+      map.getPixelByY(map.getYByPixel(mousePosY)) + map.getCubeSize()
+    );
+  end;
   if(isLeftMouseDown)then
   begin
     imgGame.canvas.pen.color := RGBToColor(108, 122, 137);
@@ -96,8 +102,19 @@ end;
 procedure TFormMain.FormCreate(Sender: TObject);
 begin
   map := TMap.create(5,imgGame);
-  mousePosX := imgGame.width + 100;
-  mousePosY := imgGame.height + 100;
+  SysUtils.CreateDir(ExtractFilePath(Application.ExeName)+'save');
+end;
+
+procedure TFormMain.FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState
+  );
+begin
+  case key of
+    192:
+    begin
+      pnlConsole.visible := not pnlConsole.visible;
+      timerRender.enabled := not timerRender.enabled;
+    end;
+  end;
 end;
 
 procedure TFormMain.imgGameMouseDown(Sender: TObject; Button: TMouseButton;
@@ -115,10 +132,14 @@ begin
   end;
 end;
 
+procedure TFormMain.imgGameMouseEnter(Sender: TObject);
+begin
+  isMouseIn := true;
+end;
+
 procedure TFormMain.imgGameMouseLeave(Sender: TObject);
 begin
-  mousePosX := imgGame.width + 100;
-  mousePosY := imgGame.height + 100;
+  isMouseIn := false;
 end;
 
 procedure TFormMain.imgGameMouseMove(Sender: TObject; Shift: TShiftState; X,
