@@ -1,7 +1,7 @@
 object FormMain: TFormMain
-  Left = 250
+  Left = 488
   Height = 700
-  Top = 629
+  Top = 301
   Width = 1000
   Caption = 'Coder vs Random'
   ClientHeight = 700
@@ -14,7 +14,7 @@ object FormMain: TFormMain
   KeyPreview = True
   OnCreate = FormCreate
   OnKeyUp = FormKeyUp
-  LCLVersion = '1.6.0.4'
+  LCLVersion = '1.6.2.0'
   object pnlShop: TPanel
     Left = 0
     Height = 200
