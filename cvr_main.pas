@@ -7,7 +7,8 @@ interface
 uses
   Classes, SysUtils, FileUtil, Forms,
   Controls, Graphics, Dialogs, ExtCtrls, StdCtrls,
-  cvr_map;
+  DOM, XMLRead, XMLWrite, XMLCfg, XMLUtils, XMLStreaming,
+  cvr_map, cvr_actor;
 
 type
 
@@ -35,6 +36,10 @@ type
     { public declarations }
   end;
 
+  TFlatColor = record
+    RED, GREEN, BLUE: Integer;
+  end;
+
 var
   FormMain: TFormMain;
   mousePosX, mousePosY: Integer;
@@ -42,6 +47,13 @@ var
   isRightMouseDown, isLeftMouseDown: Boolean;
   isRightMouseUp, isLeftMouseUp: Boolean;
   isMouseIn: Boolean;
+  idCount: Integer;
+  actorList: TList;
+const
+  LYNCH: TFlatColor = (RED: 108; GREEN: 122; BLUE: 137);
+  WHITE_SMOKE: TFlatColor = (RED: 236; GREEN: 236; BLUE: 236);
+  PUMICE: TFlatColor = (RED: 210; GREEN: 215; BLUE: 211);
+  CASCADE_: TFlatColor = (RED: 149; GREEN: 165; BLUE: 166);
 
 implementation
 
@@ -52,20 +64,21 @@ implementation
 procedure TFormMain.timerRenderTimer(Sender: TObject);
 var
   i: Integer;
+  countActors: TActor;
 begin
-  imgGame.canvas.pen.color := RGBToColor(108, 122, 137);
-  imgGame.canvas.brush.color := RGBToColor(108, 122, 137);
+  imgGame.canvas.pen.color := RGBToColor(LYNCH.RED, LYNCH.GREEN, LYNCH.BLUE);
+  imgGame.canvas.brush.color := RGBToColor(LYNCH.RED, LYNCH.GREEN, LYNCH.BLUE);
   imgGame.canvas.rectangle(0,0,imgGame.width,imgGame.width);
   for i:=0 to map.sizeY-1 do
   begin
       if(i mod 2 = 0) then
       begin
-        imgGame.canvas.pen.color := RGBToColor(236,236,236);
-        imgGame.canvas.brush.color := RGBToColor(236,236,236);
+        imgGame.canvas.pen.color := RGBToColor(WHITE_SMOKE.RED, WHITE_SMOKE.GREEN, WHITE_SMOKE.BLUE);
+        imgGame.canvas.brush.color := RGBToColor(WHITE_SMOKE.RED, WHITE_SMOKE.GREEN, WHITE_SMOKE.BLUE);
       end else
       begin
-        imgGame.canvas.pen.color := RGBToColor(218, 223, 225);
-        imgGame.canvas.brush.color := RGBToColor(218, 223, 225);
+        imgGame.canvas.pen.color := RGBToColor(PUMICE.RED, PUMICE.GREEN, PUMICE.BLUE);
+        imgGame.canvas.brush.color := RGBToColor(PUMICE.RED, PUMICE.GREEN, PUMICE.BLUE);
       end;
       imgGame.canvas.rectangle(
         0,
@@ -75,8 +88,8 @@ begin
       );
   end;
   i := 0;
-  imgGame.canvas.pen.color := RGBToColor(149, 165, 166);
-  imgGame.canvas.brush.color := RGBToColor(149, 165, 166);
+  imgGame.canvas.pen.color := RGBToColor(CASCADE_.RED, CASCADE_.GREEN, CASCADE_.BLUE);
+  imgGame.canvas.brush.color := RGBToColor(CASCADE_.RED, CASCADE_.GREEN, CASCADE_.BLUE);
   if (isMouseIn) then
   begin
     imgGame.Canvas.Rectangle(
@@ -88,8 +101,8 @@ begin
   end;
   if(isLeftMouseDown)then
   begin
-    imgGame.canvas.pen.color := RGBToColor(108, 122, 137);
-    imgGame.canvas.brush.color := RGBToColor(108, 122, 137);
+    imgGame.canvas.pen.color := RGBToColor(LYNCH.RED, LYNCH.GREEN, LYNCH.BLUE);
+    imgGame.canvas.brush.color := RGBToColor(LYNCH.RED, LYNCH.GREEN, LYNCH.BLUE);
     imgGame.Canvas.Rectangle(
       mousePosX - (map.getCubeSize() div 2),
       map.getPixelByY(map.getYByPixel(mousePosY)),
@@ -100,9 +113,19 @@ begin
 end;
 
 procedure TFormMain.FormCreate(Sender: TObject);
+var
+  IdNode: TDOMNode;
+  DocMain: TXMLDocument;
 begin
-  map := TMap.create(5,imgGame);
+  map := TMap.create(10,imgGame);
   SysUtils.CreateDir(ExtractFilePath(Application.ExeName)+'save');
+  ReadXMLFile(DocMain, ExtractFilePath(Application.ExeName)+'main.xml');
+  IdNode := DocMain.DocumentElement.FindNode('save_id_counter');
+  idCount := StrToInt(IdNode.FirstChild.NodeValue);
+  pnlConsole.items.add(IntToStr(idCount));
+  DocMain.free;
+  actorList.add(TActor.create(formmain));
+  actorList.items[1]^.translateFromTo(15,1);
 end;
 
 procedure TFormMain.FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState

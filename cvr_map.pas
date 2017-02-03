@@ -27,16 +27,17 @@ implementation
 
 { Map }
 
+{ Получить начальный пиксел по Y}
 function TMap.getPixelByY(y: Integer): Integer;
 begin
   getPixelByY := y * (imgGame.Height div sizeY);
 end;
-
+{ Получить Y по пикселу}
 function TMap.getYByPixel(y: Integer): Integer;
 begin
   getYByPixel := y div (imgGame.Height div sizeY);
 end;
-
+{ Получить сторону квадрата поля относительно их размеров }
 function TMap.getCubeSize(): Integer;
 begin
   getCubeSize := imgGame.Height div sizeY;

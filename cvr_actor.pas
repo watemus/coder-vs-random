@@ -13,10 +13,15 @@ type
 
   TActor = class
     public
+      form: TForm;
+      posX, posY: Integer;
+      toX: Integer;
+      speed: Integer;
       actorTimer: TTimer;
       constructor create(f: TForm); virtual;
-      procedure update();
-      function
+      procedure update(Sender: TObject);
+      procedure translate(x,s: Integer); virtual;
+      procedure translateVector(x,s: Integer); virtual;
   end;
 
 implementation
@@ -25,12 +30,31 @@ implementation
 
 constructor TActor.create(f: TForm);
 begin
-  actorTimer := TTimer.create(f);
+  form := f;
+  actorTimer := TTimer.create(form);
+  actorTimer.Interval := 10;
+  actorTimer.OnTimer := @update;
 end;
 
-procedure TActor.update;
+procedure TActor.update(Sender: TObject);
 begin
+  if(not (toX = posX)) then
+  begin
+    posX := posX + speed;
+  end
+end;
 
+{ Перемещение актора по вектору(x) с определенной скоростью(s) }
+procedure TActor.translateVector(x, s: Integer);
+begin
+  toX := posX + x;
+  speed := s;
+end;
+{ Перемещение актора в точку(posX + x) с определенной скоростью(s) }
+procedure TActor.translate(x, s: Integer);
+begin
+  toX := x;
+  speed := s;
 end;
 
 end.

@@ -1,7 +1,7 @@
 object FormMain: TFormMain
-  Left = 203
+  Left = 250
   Height = 700
-  Top = 93
+  Top = 629
   Width = 1000
   Caption = 'Coder vs Random'
   ClientHeight = 700

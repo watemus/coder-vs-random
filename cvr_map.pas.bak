@@ -34,7 +34,7 @@ end;
 
 function TMap.getYByPixel(y: Integer): Integer;
 begin
-  getXByPixeY := y div (imgGame.Height div sizeY);
+  getYByPixel := y div (imgGame.Height div sizeY);
 end;
 
 function TMap.getCubeSize(): Integer;
