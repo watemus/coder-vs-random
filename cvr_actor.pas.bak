@@ -19,16 +19,16 @@ type
       speed: Integer;
       actorTimer: TTimer;
       constructor create(f: TForm); virtual;
-      procedure update(Sender: TObject);
+      procedure update(Sender: TObject); virtual;
       procedure translate(x,s: Integer); virtual;
-      procedure translateFromTo(x,s: Integer); virtual;
+      procedure translateVector(x,s: Integer); virtual;
   end;
 
 implementation
 
 { TActor }
 
-constructor TActor.create(f: TForm);
+constructor TActor.create(f: TForm, py, px: Integer);
 begin
   form := f;
   actorTimer := TTimer.create(form);
@@ -44,13 +44,14 @@ begin
   end
 end;
 
-procedure TActor.translate(x, s: Integer);
+{ Перемещение актора по вектору(x) с определенной скоростью(s) }
+procedure TActor.translateVector(x, s: Integer);
 begin
   toX := posX + x;
   speed := s;
 end;
-
-procedure TActor.translateFromTo(x, s: Integer);
+{ Перемещение актора в точку(posX + x) с определенной скоростью(s) }
+procedure TActor.translate(x, s: Integer);
 begin
   toX := x;
   speed := s;

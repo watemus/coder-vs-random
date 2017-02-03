@@ -18,8 +18,8 @@ type
       toX: Integer;
       speed: Integer;
       actorTimer: TTimer;
-      constructor create(f: TForm); virtual;
-      procedure update(Sender: TObject);
+      constructor create(f: TForm;  py, px: Integer); virtual;
+      procedure update(Sender: TObject); virtual;
       procedure translate(x,s: Integer); virtual;
       procedure translateVector(x,s: Integer); virtual;
   end;
@@ -28,7 +28,7 @@ implementation
 
 { TActor }
 
-constructor TActor.create(f: TForm);
+constructor TActor.create(f: TForm; py, px: Integer);
 begin
   form := f;
   actorTimer := TTimer.create(form);

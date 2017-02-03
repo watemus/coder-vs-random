@@ -7,7 +7,7 @@ uses
   cthreads,
   {$ENDIF}{$ENDIF}
   Interfaces, // this includes the LCL widgetset
-  Forms, cvr_main, lazcontrols, cvr_actor, cvr_map, cvr_array;
+  Forms, cvr_main, lazcontrols, cvr_actor, cvr_map, cvr_array, cvr_evil;
 
 {$R *.res}
 

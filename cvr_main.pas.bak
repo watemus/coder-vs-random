@@ -8,7 +8,7 @@ uses
   Classes, SysUtils, FileUtil, Forms,
   Controls, Graphics, Dialogs, ExtCtrls, StdCtrls,
   DOM, XMLRead, XMLWrite, XMLCfg, XMLUtils, XMLStreaming,
-  cvr_map, cvr_actor;
+  cvr_map, cvr_actor, cvr_evil, cvr_array;
 
 type
 
@@ -18,6 +18,7 @@ type
     imgGame: TImage;
     pnlConsole: TListBox;
     pnlShop: TPanel;
+    timerSpawner: TTimer;
     timerRender: TTimer;
     procedure FormCreate(Sender: TObject);
     procedure FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -30,6 +31,7 @@ type
     procedure imgGameMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure timerRenderTimer(Sender: TObject);
+    procedure timerSpawnerTimer(Sender: TObject);
   private
     { private declarations }
   public
@@ -40,6 +42,8 @@ type
     RED, GREEN, BLUE: Integer;
   end;
 
+  _EvilArray_ = specialize GActorArray<TEvil>;
+
 var
   FormMain: TFormMain;
   mousePosX, mousePosY: Integer;
@@ -47,8 +51,9 @@ var
   isRightMouseDown, isLeftMouseDown: Boolean;
   isRightMouseUp, isLeftMouseUp: Boolean;
   isMouseIn: Boolean;
+  isSpawnEvil: Boolean;
   idCount: Integer;
-  actorList: TList;
+  evilArray: _EvilArray_;
 const
   LYNCH: TFlatColor = (RED: 108; GREEN: 122; BLUE: 137);
   WHITE_SMOKE: TFlatColor = (RED: 236; GREEN: 236; BLUE: 236);
@@ -63,8 +68,7 @@ implementation
 
 procedure TFormMain.timerRenderTimer(Sender: TObject);
 var
-  i: Integer;
-  countActors: TActor;
+  i,j,k: Integer;
 begin
   imgGame.canvas.pen.color := RGBToColor(LYNCH.RED, LYNCH.GREEN, LYNCH.BLUE);
   imgGame.canvas.brush.color := RGBToColor(LYNCH.RED, LYNCH.GREEN, LYNCH.BLUE);
@@ -110,6 +114,36 @@ begin
       map.getPixelByY(map.getYByPixel(mousePosY)) + map.getCubeSize()
     );
   end;
+  if(isSpawnEvil)then
+  begin
+    EvilArray.add(TEvil.create(
+      formmain,
+      random(map.sizeY),
+      imgGame.width-map.getCubeSize())
+    );
+  end;
+  for i:=low(EvilArray.arr) to high(EvilArray.arr) do
+  begin
+    for j:=0 to 4 do
+    begin
+      for k:=0 to 4 do
+      begin
+        imgGame.canvas.brush.color := RGBToColor(random(255), random(255), random(255));
+        imgGame.canvas.pen.color := imgGame.canvas.brush.color;
+        imgGame.canvas.rectangle(
+          imgGame.Width - map.getCubeSize() + (map.getCubeSize() div 10 * j),
+          imgGame.Height - map.getCubeSize() + (map.getCubeSize() div 10 * j),
+          imgGame.Width - map.getCubeSize() + (map.getCubeSize() div 10 * (j+1)),
+          imgGame.Height - map.getCubeSize() + (map.getCubeSize() div (10 * j))
+        );
+      end;
+    end;
+  end;
+end;
+
+procedure TFormMain.timerSpawnerTimer(Sender: TObject);
+begin
+  isSpawnEvil := true;
 end;
 
 procedure TFormMain.FormCreate(Sender: TObject);
@@ -124,8 +158,7 @@ begin
   idCount := StrToInt(IdNode.FirstChild.NodeValue);
   pnlConsole.items.add(IntToStr(idCount));
   DocMain.free;
-  actorList.add(TActor.create(formmain));
-  actorList.items[1]^.translateFromTo(15,1);
+  EvilArray := _EvilArray_.create;
 end;
 
 procedure TFormMain.FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState

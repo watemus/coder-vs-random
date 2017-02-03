@@ -1,7 +1,7 @@
 object FormMain: TFormMain
-  Left = 250
+  Left = 261
   Height = 700
-  Top = 629
+  Top = 213
   Width = 1000
   Caption = 'Coder vs Random'
   ClientHeight = 700
@@ -48,6 +48,12 @@ object FormMain: TFormMain
     Interval = 10
     OnTimer = timerRenderTimer
     left = 24
+    top = 8
+  end
+  object timerSpawner: TTimer
+    Interval = 5000
+    OnTimer = timerSpawnerTimer
+    left = 96
     top = 8
   end
 end
