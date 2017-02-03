@@ -48,7 +48,6 @@ var
   isRightMouseUp, isLeftMouseUp: Boolean;
   isMouseIn: Boolean;
   idCount: Integer;
-  actorList: TList;
 const
   LYNCH: TFlatColor = (RED: 108; GREEN: 122; BLUE: 137);
   WHITE_SMOKE: TFlatColor = (RED: 236; GREEN: 236; BLUE: 236);
@@ -124,8 +123,6 @@ begin
   idCount := StrToInt(IdNode.FirstChild.NodeValue);
   pnlConsole.items.add(IntToStr(idCount));
   DocMain.free;
-  actorList.add(TActor.create(formmain));
-  actorList.items[1]^.translateFromTo(15,1);
 end;
 
 procedure TFormMain.FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState

@@ -125,7 +125,7 @@ begin
   pnlConsole.items.add(IntToStr(idCount));
   DocMain.free;
   actorList.add(TActor.create(formmain));
-  (actorList.items[1] as TActor).translateFromTo(15,1);
+  actorList.items[1]^.translateFromTo(15,1);
 end;
 
 procedure TFormMain.FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState
