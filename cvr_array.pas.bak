@@ -14,7 +14,6 @@ type
     public
       arr: array of T;
       length: Integer;
-
       constructor create();
       destructor destroy();
       procedure add(item: T);
@@ -30,7 +29,7 @@ implementation
 
 constructor GActorArray.create;
 begin
-
+  length := 0;
 end;
 
 destructor GActorArray.destroy;
@@ -40,12 +39,15 @@ end;
 
 procedure GActorArray.add(item: T);
 begin
-
+  inc(length);
+  SetLength(arr, length);
+  arr[length] := item;
 end;
 
 procedure GActorArray.destroyLast;
 begin
-
+  dec(length);
+  SetLength(arr, length);
 end;
 
 procedure GActorArray.destroyAtIndex(index: Integer);
