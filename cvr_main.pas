@@ -165,8 +165,10 @@ end;
 procedure TFormMain.imgGameMouseMove(Sender: TObject; Shift: TShiftState; X,
   Y: Integer);
 begin
-  mousePosY := Y;
-  mousePosX := X;
+  if (Y<Map.sizeY*47) and (Y>1) then begin
+  mousePosY := Y;   end;
+  if (x<imggame.width-map.getCubeSize() div 2 ) and (X>map.getCubeSize() div 2 ) then begin
+  mousePosX := X; end;
 end;
 
 procedure TFormMain.imgGameMouseUp(Sender: TObject; Button: TMouseButton;
