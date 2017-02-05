@@ -35,7 +35,7 @@ procedure GActorArray.add(item: T);
 begin
   inc(length);
   SetLength(arr, length);
-  arr[length] := item;
+  arr[length-1] := item;
 end;
 
 procedure GActorArray.destroyLast;
@@ -51,7 +51,7 @@ begin
   if((index <= length) and (index >= 0)) then
   begin
     dec(length);
-    for i := index to length do
+    for i := index to length-1 do
     begin
       arr[i] := arr[i+1];
     end;
@@ -61,7 +61,7 @@ end;
 
 function GActorArray.getItemAtIndex(index: Integer): T;
 begin
-  if((index <= length) and (index >= 0)) then
+  if((index < length) and (index >= 0)) then
   begin
     getItemAtIndex := arr[index];
     exit();

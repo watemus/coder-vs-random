@@ -55,6 +55,7 @@ var
   idCount: Integer;
   evilArray: _EvilArray_;
 const
+  EVIL_SIZE: Integer = 2;
   LYNCH: TFlatColor = (RED: 108; GREEN: 122; BLUE: 137);
   WHITE_SMOKE: TFlatColor = (RED: 236; GREEN: 236; BLUE: 236);
   PUMICE: TFlatColor = (RED: 210; GREEN: 215; BLUE: 211);
@@ -91,7 +92,6 @@ begin
         map.getPixelByY(i+1)
       );
   end;
-  i := 0;
   imgGame.canvas.pen.color := RGBToColor(CASCADE_.RED, CASCADE_.GREEN, CASCADE_.BLUE);
   imgGame.canvas.brush.color := RGBToColor(CASCADE_.RED, CASCADE_.GREEN, CASCADE_.BLUE);
   if (isMouseIn) then
@@ -119,22 +119,23 @@ begin
     EvilArray.add(TEvil.create(
       formmain,
       random(map.sizeY),
-      imgGame.width-map.getCubeSize())
+      0)
     );
+    isSpawnEvil := false;
   end;
   for i:=low(EvilArray.arr) to high(EvilArray.arr) do
   begin
-    for j:=0 to 4 do
+    for j:=0 to EVIL_SIZE-1 do
     begin
-      for k:=0 to 4 do
+      for k:=0 to EVIL_SIZE-1 do
       begin
         imgGame.canvas.brush.color := RGBToColor(random(255), random(255), random(255));
         imgGame.canvas.pen.color := imgGame.canvas.brush.color;
         imgGame.canvas.rectangle(
-          imgGame.Width - map.getCubeSize() + (map.getCubeSize() div 10 * j),
-          imgGame.Height - map.getCubeSize() + (map.getCubeSize() div 10 * j),
-          imgGame.Width - map.getCubeSize() + (map.getCubeSize() div 10 * (j+1)),
-          imgGame.Height - map.getCubeSize() + (map.getCubeSize() div 10 * (j+1))
+          imgGame.Width - map.getCubeSize() + (map.getCubeSize() div EVIL_SIZE * j) - EvilArray.arr[i].posX,
+          imgGame.Height - map.getCubeSize() + (map.getCubeSize() div EVIL_SIZE * k) - EvilArray.arr[i].posY * map.getCubeSize,
+          imgGame.Width - map.getCubeSize() + (map.getCubeSize() div EVIL_SIZE * (j+1))- EvilArray.arr[i].posX,
+          imgGame.Height - map.getCubeSize() + (map.getCubeSize() div EVIL_SIZE * (k+1)) - EvilArray.arr[i].posY * map.getCubeSize
         );
       end;
     end;

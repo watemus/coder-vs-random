@@ -1,7 +1,7 @@
 object FormMain: TFormMain
-  Left = 261
+  Left = 191
   Height = 700
-  Top = 213
+  Top = 317
   Width = 1000
   Caption = 'Coder vs Random'
   ClientHeight = 700
@@ -41,7 +41,9 @@ object FormMain: TFormMain
     Top = 0
     Width = 696
     ItemHeight = 0
+    ScrollWidth = 694
     TabOrder = 1
+    TopIndex = -1
     Visible = False
   end
   object timerRender: TTimer

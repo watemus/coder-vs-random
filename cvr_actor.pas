@@ -31,6 +31,8 @@ implementation
 constructor TActor.create(f: TForm; py, px: Integer);
 begin
   form := f;
+  posX := px;
+  posY := py;
   actorTimer := TTimer.create(form);
   actorTimer.Interval := 10;
   actorTimer.OnTimer := @update;
@@ -44,13 +46,13 @@ begin
   end
 end;
 
-{ Перемещение актора по вектору(x) с определенной скоростью(s) }
+{ Перемещение актора по вектору(posX + x) с определенной скоростью(s) }
 procedure TActor.translateVector(x, s: Integer);
 begin
   toX := posX + x;
   speed := s;
 end;
-{ Перемещение актора в точку(posX + x) с определенной скоростью(s) }
+{ Перемещение актора в точку(x) с определенной скоростью(s) }
 procedure TActor.translate(x, s: Integer);
 begin
   toX := x;
