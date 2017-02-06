@@ -30,7 +30,7 @@ end;
 procedure TEvil.update(Sender: TObject);
 begin
   inherited update(Sender);
-  translateVector(1,speed);
+  translateVector(1,0,speed);
 end;
 
 end.

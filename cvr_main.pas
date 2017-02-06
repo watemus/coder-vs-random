@@ -14,6 +14,10 @@ type
 
   { TFormMain }
 
+  TFlatColor = record
+    RED, GREEN, BLUE: Integer;
+  end;
+
   TFormMain = class(TForm)
     imgGame: TImage;
     pnlConsole: TListBox;
@@ -32,14 +36,12 @@ type
       Shift: TShiftState; X, Y: Integer);
     procedure timerRenderTimer(Sender: TObject);
     procedure timerSpawnerTimer(Sender: TObject);
+    procedure renderField(sizeY: integer);
+    procedure renderRect(posY,posX,sizeY,sizeX: Integer; flatColor: TFlatColor);
   private
     { private declarations }
   public
     { public declarations }
-  end;
-
-  TFlatColor = record
-    RED, GREEN, BLUE: Integer;
   end;
 
   _EvilArray_ = specialize GActorArray<TEvil>;
@@ -55,7 +57,7 @@ var
   idCount: Integer;
   evilArray: _EvilArray_;
 const
-  EVIL_SIZE: Integer = 2;
+  EVIL_SIZE: Integer = 5;
   LYNCH: TFlatColor = (RED: 108; GREEN: 122; BLUE: 137);
   WHITE_SMOKE: TFlatColor = (RED: 236; GREEN: 236; BLUE: 236);
   PUMICE: TFlatColor = (RED: 210; GREEN: 215; BLUE: 211);
@@ -66,10 +68,9 @@ implementation
 {$R *.lfm}
 
 { TFormMain }
-
-procedure TFormMain.timerRenderTimer(Sender: TObject);
+procedure TFormMain.renderField(sizeY: integer);
 var
-  i,j,k: Integer;
+  i: Integer;
 begin
   imgGame.canvas.pen.color := RGBToColor(LYNCH.RED, LYNCH.GREEN, LYNCH.BLUE);
   imgGame.canvas.brush.color := RGBToColor(LYNCH.RED, LYNCH.GREEN, LYNCH.BLUE);
@@ -92,26 +93,49 @@ begin
         map.getPixelByY(i+1)
       );
   end;
-  imgGame.canvas.pen.color := RGBToColor(CASCADE_.RED, CASCADE_.GREEN, CASCADE_.BLUE);
-  imgGame.canvas.brush.color := RGBToColor(CASCADE_.RED, CASCADE_.GREEN, CASCADE_.BLUE);
-  if (isMouseIn) then
+end;
+
+procedure TFormMain.renderRect(posY, posX, sizeY, sizeX: Integer;
+  flatColor: TFlatColor);
+begin
+  imgGame.canvas.pen.color := RGBToColor(flatColor.RED, flatColor.GREEN, flatColor.BLUE);
+  imgGame.canvas.brush.color := RGBToColor(flatColor.RED, flatColor.GREEN, flatColor.BLUE);
+  imgGame.Canvas.Rectangle(
+      posX - (sizeX div 2),
+      map.getPixelByY(posY) + (map.getCubeSize() div 2) + (sizeY div 2),
+      posX + (sizeX div 2),
+      map.getPixelByY(posY) + (map.getCubeSize() div 2) - (sizeY div 2)
+    );
+end;
+
+procedure TFormMain.timerRenderTimer(Sender: TObject);
+var
+  i,j,k: Integer;
+begin
+  renderField(map.sizeY);
+  if (isMouseIn and
+     (not (mousePosX > (imgGame.width - map.getCubeSize() div 2))
+         and (mousePosX < (0 + map.getCubeSize() div 2))
+     and  (mousePosY > (imgGame.height - map.getCubeSize() div 2))
+         and (mousePosY < 0 + map.getCubeSize() div 2)))
+     then
   begin
-    imgGame.Canvas.Rectangle(
-      mousePosX - (map.getCubeSize() div 2),
-      map.getPixelByY(map.getYByPixel(mousePosY)),
-      mousePosX + (map.getCubeSize() div 2),
-      map.getPixelByY(map.getYByPixel(mousePosY)) + map.getCubeSize()
+    renderRect(
+      map.getYByPixel(mousePosY),
+      mousePosX,
+      map.getCubeSize(),
+      map.getCubeSize(),
+      CASCADE_
     );
   end;
   if(isLeftMouseDown)then
   begin
-    imgGame.canvas.pen.color := RGBToColor(LYNCH.RED, LYNCH.GREEN, LYNCH.BLUE);
-    imgGame.canvas.brush.color := RGBToColor(LYNCH.RED, LYNCH.GREEN, LYNCH.BLUE);
-    imgGame.Canvas.Rectangle(
-      mousePosX - (map.getCubeSize() div 2),
-      map.getPixelByY(map.getYByPixel(mousePosY)),
-      mousePosX + (map.getCubeSize() div 2),
-      map.getPixelByY(map.getYByPixel(mousePosY)) + map.getCubeSize()
+    renderRect(
+      map.getYByPixel(mousePosY),
+      mousePosX,
+      map.getCubeSize(),
+      map.getCubeSize(),
+      LYNCH
     );
   end;
   if(isSpawnEvil)then
@@ -133,9 +157,9 @@ begin
         imgGame.canvas.pen.color := imgGame.canvas.brush.color;
         imgGame.canvas.rectangle(
           imgGame.Width - map.getCubeSize() + (map.getCubeSize() div EVIL_SIZE * j) - EvilArray.arr[i].posX,
-          imgGame.Height - map.getCubeSize() + (map.getCubeSize() div EVIL_SIZE * k) - EvilArray.arr[i].posY * map.getCubeSize,
+          imgGame.Height - map.getCubeSize() + (map.getCubeSize() div EVIL_SIZE * k) - map.getPixelByY(EvilArray.arr[i].posY),
           imgGame.Width - map.getCubeSize() + (map.getCubeSize() div EVIL_SIZE * (j+1))- EvilArray.arr[i].posX,
-          imgGame.Height - map.getCubeSize() + (map.getCubeSize() div EVIL_SIZE * (k+1)) - EvilArray.arr[i].posY * map.getCubeSize
+          imgGame.Height - map.getCubeSize() + (map.getCubeSize() div EVIL_SIZE * (k+1)) - map.getPixelByY(EvilArray.arr[i].posY)
         );
       end;
     end;
