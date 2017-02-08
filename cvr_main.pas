@@ -113,12 +113,7 @@ var
   i,j,k: Integer;
 begin
   renderField(map.sizeY);
-  if (isMouseIn and
-     (not (mousePosX > (imgGame.width - map.getCubeSize() div 2))
-         and (mousePosX < (0 + map.getCubeSize() div 2))
-     and  (mousePosY > (imgGame.height - map.getCubeSize() div 2))
-         and (mousePosY < 0 + map.getCubeSize() div 2)))
-     then
+  if (isMouseIn) then
   begin
     renderRect(
       map.getYByPixel(mousePosY),

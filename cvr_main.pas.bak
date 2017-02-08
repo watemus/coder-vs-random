@@ -117,7 +117,7 @@ begin
      (not (mousePosX > (imgGame.width - map.getCubeSize() div 2))
          and (mousePosX < (0 + map.getCubeSize() div 2))
      and  (mousePosY > (imgGame.height - map.getCubeSize() div 2))
-         and (mousePosY < 0 + map.getCubeSize() div 2))))
+         and (mousePosY < 0 + map.getCubeSize() div 2)))
      then
   begin
     renderRect(
