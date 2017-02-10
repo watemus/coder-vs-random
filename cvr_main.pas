@@ -20,7 +20,6 @@ type
 
   TFormMain = class(TForm)
     imgGame: TImage;
-    pnlConsole: TListBox;
     pnlShop: TPanel;
     timerSpawner: TTimer;
     timerRender: TTimer;
@@ -152,19 +151,19 @@ begin
   end;
   if(isLeftMouseUp)then
   begin
-     if(cppArray.isCreateActorHere(
+     {if(cppArray.isCreateActorHere(
        mousePosX,
        map.getYByPixel(mousePosY),
        map.getCubeSize()
      )) then
-     begin
+     begin}
        CppArray.add(TCpp.create(
         formmain,
         map.getYByPixel(mousePosY),
         mousePosX,
         map.getCubeSize()
        ));
-     end;
+     {end;}
      isLeftMouseUp := false;
   end;
   if(isSpawnEvil)then
@@ -172,26 +171,30 @@ begin
     EvilArray.add(TEvil.create(
       formmain,
       random(map.sizeY),
-      0,
-      map.getCubeSize())
+      formmain.width,
+      5)
     );
     isSpawnEvil := false;
   end;
   for i:=low(EvilArray.arr) to high(EvilArray.arr) do
   begin
-    for j:=0 to EVIL_SIZE-1 do
+    for j:=0 to EvilArray.arr[i].sizeX-1 do
     begin
       for k:=0 to EVIL_SIZE-1 do
       begin
         imgGame.canvas.brush.color := RGBToColor(random(255), random(255), random(255));
         imgGame.canvas.pen.color := imgGame.canvas.brush.color;
         imgGame.canvas.rectangle(
-          imgGame.Width - map.getCubeSize() + (map.getCubeSize() div EVIL_SIZE * j) - EvilArray.arr[i].posX,
-          imgGame.Height - map.getCubeSize() + (map.getCubeSize() div EVIL_SIZE * k) - map.getPixelByY(EvilArray.arr[i].posY),
-          imgGame.Width - map.getCubeSize() + (map.getCubeSize() div EVIL_SIZE * (j+1))- EvilArray.arr[i].posX,
-          imgGame.Height - map.getCubeSize() + (map.getCubeSize() div EVIL_SIZE * (k+1)) - map.getPixelByY(EvilArray.arr[i].posY)
+          EvilArray.arr[i].posX - (map.getCubeSize() div EVIL_SIZE * j),
+          map.getPixelByY(EvilArray.arr[i].posY) + (map.getCubeSize() div EVIL_SIZE * k),
+          EvilArray.arr[i].posX - (map.getCubeSize() div EVIL_SIZE * (j+1)),
+          map.getPixelByY(EvilArray.arr[i].posY) + (map.getCubeSize() div EVIL_SIZE * (k+1))
         );
       end;
+    end;
+    if(EvilArray.arr[i].isDie) then
+    begin
+      EvilArray.destroyAtIndex(i);
     end;
   end;
   for i := low(CppArray.arr) to high(CppArray.arr) do
@@ -203,6 +206,30 @@ begin
       map.getCubeSize(),
       JADE
     );
+    renderRect(
+      CppArray.arr[i].plus_.posY,
+      CppArray.arr[i].plus_.posX,
+      map.getCubeSize(),
+      map.getCubeSize() div 2,
+      JADE
+    );
+    renderRect(
+      CppArray.arr[i].plus_.posY,
+      CppArray.arr[i].plus_.posX,
+      map.getCubeSize() div 2,
+      map.getCubeSize(),
+      JADE
+    );
+    for j := low(EvilArray.arr) to high(EvilArray.arr) do
+    begin
+      if(((CppArray.arr[i].plus_.posX = EvilArray.arr[j].posX)) or
+          (CppArray.arr[i].plus_.posX + 1 = EvilArray.arr[j].posX)) and
+         (CppArray.arr[i].plus_.posY = EvilArray.arr[j].posY) Then
+      begin
+        EvilArray.arr[j].addHp(-CppArray.arr[i].plus_.damage);
+      end;
+    end;
+    if(CppArray.arr[i].isDie) then CppArray.destroyAtIndex(i);
   end;
 end;
 
@@ -212,17 +239,17 @@ begin
 end;
 
 procedure TFormMain.FormCreate(Sender: TObject);
-var
+{var
   IdNode: TDOMNode;
-  DocMain: TXMLDocument;
+  DocMain: TXMLDocument;}
 begin
   map := TMap.create(10,imgGame);
-  SysUtils.CreateDir(ExtractFilePath(Application.ExeName)+'save');
+  {SysUtils.CreateDir(ExtractFilePath(Application.ExeName)+'save');
   ReadXMLFile(DocMain, ExtractFilePath(Application.ExeName)+'main.xml');
   IdNode := DocMain.DocumentElement.FindNode('save_id_counter');
   idCount := StrToInt(IdNode.FirstChild.NodeValue);
   pnlConsole.items.add(IntToStr(idCount));
-  DocMain.free;
+  DocMain.free;}
   EvilArray := _EvilArray_.create;
   CppArray := _CppArray_.create;
 end;
@@ -233,7 +260,6 @@ begin
   case key of
     192:
     begin
-      pnlConsole.visible := not pnlConsole.visible;
       timerRender.enabled := not timerRender.enabled;
     end;
   end;

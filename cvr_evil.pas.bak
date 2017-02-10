@@ -23,15 +23,16 @@ implementation
 
 constructor TEvil.create(f: TForm; py, px, size: Integer);
 begin
-  inherited create(f, py, px);
+  inherited create(f, py, px, size);
+  MAX_HP := 50;
+  hp := MAX_HP;
   speed := 1;
-  sizeX := size;
 end;
 
 procedure TEvil.update(Sender: TObject);
 begin
   inherited update(Sender);
-  translateVector(1,0,speed);
+  translateVector(-1,0,speed);
 end;
 
 end.

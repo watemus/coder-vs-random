@@ -12,10 +12,9 @@ type
   { TActor }
 
   TActor = class
-    private
-      hp: Integer;
     public
       form: TForm;
+      hp: Integer;
       posX, posY: Integer;
       toX: Integer;
       toY: Integer;
@@ -29,7 +28,7 @@ type
       procedure update(Sender: TObject); virtual;
       procedure translate(x,y,s: Integer); virtual;
       procedure translateVector(x,y,s: Integer); virtual;
-      function isCreateActorHere(x,y,size: Integer): boolean;
+      {function isCreateActorHere(x,y,size: Integer): boolean;}
       function getHp(): integer;
       procedure addHp(hp_: Integer);
       procedure setHp(hp_: Integer);
@@ -96,7 +95,7 @@ begin
   speed := s;
 end;
 
-function TActor.isCreateActorHere(x, y, size: Integer): boolean;
+{function TActor.isCreateActorHere(x, y, size: Integer): boolean;
 begin
   if((y = posY) and (abs(posX - x) < ((sizeX div 2) + (size div 2)))) then
   begin
@@ -106,7 +105,7 @@ begin
   begin
     isCreateActorHere := false;
   end;
-end;
+end;}
 
 function TActor.getHp: integer;
 begin

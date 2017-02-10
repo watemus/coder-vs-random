@@ -83,7 +83,7 @@ var
 begin
   for i := low(arr) to high(arr) do
   begin
-    if (not arr[i].isCreateActorHere(
+    if (arr[i].isCreateActorHere(
        x,
        y,
        size
