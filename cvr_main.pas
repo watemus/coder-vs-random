@@ -8,7 +8,7 @@ uses
   Classes, SysUtils, FileUtil, Forms,
   Controls, Graphics, Dialogs, ExtCtrls, StdCtrls,
   DOM, XMLRead, XMLWrite, XMLCfg, XMLUtils, XMLStreaming,
-  cvr_map, cvr_actor, cvr_evil, cvr_array;
+  cvr_map, cvr_actor, cvr_evil, cvr_cpp, cvr_array;
 
 type
 
@@ -38,6 +38,7 @@ type
     procedure timerSpawnerTimer(Sender: TObject);
     procedure renderField(sizeY: integer);
     procedure renderRect(posY,posX,sizeY,sizeX: Integer; flatColor: TFlatColor);
+    procedure renderEllipse(posY,posX,sizeY,sizeX: Integer; flatColor: TFlatColor);
   private
     { private declarations }
   public
@@ -45,6 +46,7 @@ type
   end;
 
   _EvilArray_ = specialize GActorArray<TEvil>;
+  _CppArray_ = specialize GActorArray<TCpp>;
 
 var
   FormMain: TFormMain;
@@ -56,12 +58,14 @@ var
   isSpawnEvil: Boolean;
   idCount: Integer;
   evilArray: _EvilArray_;
+  cppArray: _CppArray_;
 const
   EVIL_SIZE: Integer = 5;
   LYNCH: TFlatColor = (RED: 108; GREEN: 122; BLUE: 137);
   WHITE_SMOKE: TFlatColor = (RED: 236; GREEN: 236; BLUE: 236);
   PUMICE: TFlatColor = (RED: 210; GREEN: 215; BLUE: 211);
   CASCADE_: TFlatColor = (RED: 149; GREEN: 165; BLUE: 166);
+  JADE: TFlatColor = (RED: 0; GREEN: 177; BLUE: 106);
 
 implementation
 
@@ -108,6 +112,19 @@ begin
     );
 end;
 
+procedure TFormMain.renderEllipse(posY, posX, sizeY, sizeX: Integer;
+  flatColor: TFlatColor);
+begin
+  imgGame.canvas.pen.color := RGBToColor(flatColor.RED, flatColor.GREEN, flatColor.BLUE);
+  imgGame.canvas.brush.color := RGBToColor(flatColor.RED, flatColor.GREEN, flatColor.BLUE);
+  imgGame.Canvas.Ellipse(
+      posX - (sizeX div 2),
+      map.getPixelByY(posY) + (map.getCubeSize() div 2) + (sizeY div 2),
+      posX + (sizeX div 2),
+      map.getPixelByY(posY) + (map.getCubeSize() div 2) - (sizeY div 2)
+    );
+end;
+
 procedure TFormMain.timerRenderTimer(Sender: TObject);
 var
   i,j,k: Integer;
@@ -133,12 +150,30 @@ begin
       LYNCH
     );
   end;
+  if(isLeftMouseUp)then
+  begin
+     if(cppArray.isCreateActorHere(
+       mousePosX,
+       map.getYByPixel(mousePosY),
+       map.getCubeSize()
+     )) then
+     begin
+       CppArray.add(TCpp.create(
+        formmain,
+        map.getYByPixel(mousePosY),
+        mousePosX,
+        map.getCubeSize()
+       ));
+     end;
+     isLeftMouseUp := false;
+  end;
   if(isSpawnEvil)then
   begin
     EvilArray.add(TEvil.create(
       formmain,
       random(map.sizeY),
-      0)
+      0,
+      map.getCubeSize())
     );
     isSpawnEvil := false;
   end;
@@ -158,6 +193,16 @@ begin
         );
       end;
     end;
+  end;
+  for i := low(CppArray.arr) to high(CppArray.arr) do
+  begin
+    renderEllipse(
+      CppArray.arr[i].posY,
+      CppArray.arr[i].posX,
+      map.getCubeSize(),
+      map.getCubeSize(),
+      JADE
+    );
   end;
 end;
 
@@ -179,6 +224,7 @@ begin
   pnlConsole.items.add(IntToStr(idCount));
   DocMain.free;
   EvilArray := _EvilArray_.create;
+  CppArray := _CppArray_.create;
 end;
 
 procedure TFormMain.FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState

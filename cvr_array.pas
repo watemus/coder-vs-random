@@ -20,6 +20,7 @@ type
       procedure destroyAtIndex(index: Integer);
       function getItemAtIndex(index: Integer): T;
       function getLastItem(): T;
+      function isCreateActorHere(x, y, size: Integer): boolean;
   end;
 
 implementation
@@ -32,6 +33,8 @@ begin
 end;
 
 procedure GActorArray.add(item: T);
+var
+  i: Integer;
 begin
   inc(length);
   SetLength(arr, length);
@@ -72,6 +75,25 @@ end;
 function GActorArray.getLastItem: T;
 begin
   getLastItem := arr[length];
+end;
+
+function GActorArray.isCreateActorHere(x, y, size: Integer): boolean;
+var
+  i: Integer;
+begin
+  for i := low(arr) to high(arr) do
+  begin
+    if (arr[i].isCreateActorHere(
+       x,
+       y,
+       size
+    ) and (i <> (length-1))) then
+    begin
+      isCreateActorHere := false;
+      exit();
+    end;
+  end;
+  isCreateActorHere := true;
 end;
 
 end.

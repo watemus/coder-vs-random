@@ -23,10 +23,13 @@ type
       actorTimer: TTimer;
       MAX_HP: Integer;
       isDie: boolean;
-      constructor create(f: TForm;  py, px: Integer); virtual;
+      sizeX : Integer;
+      damage: Integer;
+      constructor create(f: TForm;  py, px, size: Integer); virtual;
       procedure update(Sender: TObject); virtual;
       procedure translate(x,y,s: Integer); virtual;
       procedure translateVector(x,y,s: Integer); virtual;
+      function isCreateActorHere(x,y,size: Integer): boolean;
       function getHp(): integer;
       procedure addHp(hp_: Integer);
       procedure setHp(hp_: Integer);
@@ -36,11 +39,12 @@ implementation
 
 { TActor }
 
-constructor TActor.create(f: TForm; py, px: Integer);
+constructor TActor.create(f: TForm; py, px, size: Integer);
 begin
   form := f;
   posX := px;
   posY := py;
+  sizeX := size;
   actorTimer := TTimer.create(form);
   actorTimer.Interval := 10;
   actorTimer.OnTimer := @update;
@@ -90,6 +94,18 @@ begin
   toX := posX + x;
   toY := posY + y;
   speed := s;
+end;
+
+function TActor.isCreateActorHere(x, y, size: Integer): boolean;
+begin
+  if((y = posY) and (abs(posX - x) < ((sizeX div 2) + (size div 2)))) then
+  begin
+    isCreateActorHere := true;
+    writeln(1);
+  end else
+  begin
+    isCreateActorHere := false;
+  end;
 end;
 
 function TActor.getHp: integer;

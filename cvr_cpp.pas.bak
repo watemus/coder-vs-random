@@ -13,7 +13,7 @@ type
 
   TCpp = class(TActor)
     public
-      constructor create(f: Form; py, px: Integer); override;
+      constructor create(f: TForm; py, px, size: Integer);
       procedure update(Sender: TObject); override;
   end;
 
@@ -21,9 +21,10 @@ implementation
 
 { TCpp }
 
-constructor TCpp.create(f: Form; py, px: Integer);
+constructor TCpp.create(f: TForm; py, px, size: Integer);
 begin
   inherited create(f, py, px);
+  sizeX := size;
 end;
 
 procedure TCpp.update(Sender: TObject);

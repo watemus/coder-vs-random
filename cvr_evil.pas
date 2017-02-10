@@ -13,7 +13,7 @@ type
 
   TEvil = class(TActor)
     public
-      constructor create(f: TForm; py, px: Integer);
+      constructor create(f: TForm; py, px, size: Integer); override;
       procedure update(Sender: TObject); override;
   end;
 
@@ -21,9 +21,9 @@ implementation
 
 { TEvil }
 
-constructor TEvil.create(f: TForm; py, px: Integer);
+constructor TEvil.create(f: TForm; py, px, size: Integer);
 begin
-  inherited create(f, py, px);
+  inherited create(f, py, px, size);
   speed := 1;
 end;
 
