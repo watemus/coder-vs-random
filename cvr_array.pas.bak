@@ -20,7 +20,7 @@ type
       procedure destroyAtIndex(index: Integer);
       function getItemAtIndex(index: Integer): T;
       function getLastItem(): T;
-      function isCreateActorHere(x, y, size: Integer): boolean;
+      {function isCreateActorHere(x, y, size: Integer): boolean;}
   end;
 
 implementation
@@ -77,7 +77,7 @@ begin
   getLastItem := arr[length];
 end;
 
-function GActorArray.isCreateActorHere(x, y, size: Integer): boolean;
+{function GActorArray.isCreateActorHere(x, y, size: Integer): boolean;
 var
   i: Integer;
 begin
@@ -94,7 +94,7 @@ begin
     end;
   end;
   isCreateActorHere := true;
-end;
+end;}
 
 end.
 

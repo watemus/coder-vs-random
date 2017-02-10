@@ -33,8 +33,6 @@ begin
 end;
 
 procedure GActorArray.add(item: T);
-var
-  i: Integer;
 begin
   inc(length);
   SetLength(arr, length);

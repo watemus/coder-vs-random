@@ -20,6 +20,7 @@ type
 
   TFormMain = class(TForm)
     imgGame: TImage;
+    lblPoints: TLabel;
     pnlShop: TPanel;
     timerSpawner: TTimer;
     timerRender: TTimer;
@@ -38,6 +39,7 @@ type
     procedure renderField(sizeY: integer);
     procedure renderRect(posY,posX,sizeY,sizeX: Integer; flatColor: TFlatColor);
     procedure renderEllipse(posY,posX,sizeY,sizeX: Integer; flatColor: TFlatColor);
+    function buyActor(cost: Integer): boolean;
   private
     { private declarations }
   public
@@ -49,6 +51,7 @@ type
 
 var
   FormMain: TFormMain;
+  money : Integer;
   mousePosX, mousePosY: Integer;
   map: TMap;
   isRightMouseDown, isLeftMouseDown: Boolean;
@@ -124,10 +127,22 @@ begin
     );
 end;
 
+function TFormMain.buyActor(cost: Integer): boolean;
+begin
+  if(money - cost >= 0)then
+  begin
+    money := money - cost;
+    buyActor := true;
+    exit();
+  end;
+  buyActor := false;
+end;
+
 procedure TFormMain.timerRenderTimer(Sender: TObject);
 var
   i,j,k: Integer;
 begin
+  lblPoints.caption := 'Coffee points: ' + IntToStr(money);
   renderField(map.sizeY);
   if (isMouseIn) then
   begin
@@ -157,12 +172,15 @@ begin
        map.getCubeSize()
      )) then
      begin}
-       CppArray.add(TCpp.create(
-        formmain,
-        map.getYByPixel(mousePosY),
-        mousePosX,
-        map.getCubeSize()
-       ));
+       if(buyActor(15)) then
+       begin
+         CppArray.add(TCpp.create(
+          formmain,
+          map.getYByPixel(mousePosY),
+          mousePosX,
+          map.getCubeSize()
+         ));
+       end;
      {end;}
      isLeftMouseUp := false;
   end;
@@ -244,6 +262,7 @@ procedure TFormMain.FormCreate(Sender: TObject);
   DocMain: TXMLDocument;}
 begin
   map := TMap.create(10,imgGame);
+  money := 30;
   {SysUtils.CreateDir(ExtractFilePath(Application.ExeName)+'save');
   ReadXMLFile(DocMain, ExtractFilePath(Application.ExeName)+'main.xml');
   IdNode := DocMain.DocumentElement.FindNode('save_id_counter');
@@ -260,7 +279,6 @@ begin
   case key of
     192:
     begin
-      pnlConsole.visible := not pnlConsole.visible;
       timerRender.enabled := not timerRender.enabled;
     end;
   end;
