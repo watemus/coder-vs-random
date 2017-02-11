@@ -54,6 +54,7 @@ constructor TCpp.create(f: TForm; py, px, size: Integer);
 begin
   inherited create(f, py, px, size);
   plus_ := TPlus.create(f, py, px, size);
+  hp := 9;
 end;
 
 procedure TCpp.update(Sender: TObject);

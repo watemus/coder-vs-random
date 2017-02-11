@@ -8,7 +8,7 @@ uses
   {$ENDIF}{$ENDIF}
   Interfaces, // this includes the LCL widgetset
   Forms, cvr_main, lazcontrols, cvr_actor, cvr_map, cvr_array, cvr_evil, 
-cvr_cpp;
+cvr_cpp, cvr_java;
 
 {$R *.res}
 

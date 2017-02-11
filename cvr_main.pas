@@ -8,7 +8,7 @@ uses
   Classes, SysUtils, FileUtil, Forms,
   Controls, Graphics, Dialogs, ExtCtrls, StdCtrls,
   {DOM, XMLRead, XMLWrite, XMLCfg, XMLUtils, XMLStreaming,}
-  cvr_map, cvr_actor, cvr_evil, cvr_cpp, cvr_array;
+  cvr_map, cvr_actor, cvr_evil, cvr_cpp, cvr_java, cvr_array;
 
 type
 
@@ -48,6 +48,7 @@ type
 
   _EvilArray_ = specialize GActorArray<TEvil>;
   _CppArray_ = specialize GActorArray<TCpp>;
+  _JavaArray_ = specialize GActorArray<TJava>;
 
 var
   FormMain: TFormMain;
@@ -61,6 +62,7 @@ var
   idCount: Integer;
   evilArray: _EvilArray_;
   cppArray: _CppArray_;
+  javaArray: _JavaArray_;
 const
   EVIL_SIZE: Integer = 5;
   LYNCH: TFlatColor = (RED: 108; GREEN: 122; BLUE: 137);
@@ -68,6 +70,7 @@ const
   PUMICE: TFlatColor = (RED: 210; GREEN: 215; BLUE: 211);
   CASCADE_: TFlatColor = (RED: 149; GREEN: 165; BLUE: 166);
   JADE: TFlatColor = (RED: 0; GREEN: 177; BLUE: 106);
+  CALIFORNIA: TFlatColor = (RED: 248; GREEN: 148; BLUE: 6);
 
 implementation
 
@@ -140,7 +143,7 @@ end;
 
 procedure TFormMain.timerRenderTimer(Sender: TObject);
 var
-  i,j,k: Integer;
+  i,j,k,l: Integer;
 begin
   lblPoints.caption := 'Coffee points: ' + IntToStr(money);
   renderField(map.sizeY);
@@ -154,7 +157,7 @@ begin
       CASCADE_
     );
   end;
-  if(isLeftMouseDown)then
+  if(isLeftMouseDown or isRightMouseDown)then
   begin
     renderRect(
       map.getYByPixel(mousePosY),
@@ -184,13 +187,26 @@ begin
      {end;}
      isLeftMouseUp := false;
   end;
+  if(isRightMouseUp) then
+  begin
+    if(buyActor(15)) then
+    begin
+      JavaArray.add(TJava.create(
+        formmain,
+        map.getYByPixel(mousePosY),
+        mousePosX,
+        map.getCubeSize()
+      ));
+    end;
+    isRightMouseUp := false;
+  end;
   if(isSpawnEvil)then
   begin
     EvilArray.add(TEvil.create(
       formmain,
       random(map.sizeY),
       formmain.width,
-      5)
+      EVIL_SIZE)
     );
     isSpawnEvil := false;
   end;
@@ -208,6 +224,37 @@ begin
           EvilArray.arr[i].posX - (map.getCubeSize() div EVIL_SIZE * (j+1)),
           map.getPixelByY(EvilArray.arr[i].posY) + (map.getCubeSize() div EVIL_SIZE * (k+1))
         );
+        for l := low(CppArray.arr) to high(CppArray.arr) do
+        begin
+          if(((CppArray.arr[l].posX + map.getCubeSize - 1 = EvilArray.arr[i].posX)) or
+          (CppArray.arr[l].posX + map.getCubeSize = EvilArray.arr[i].posX)) and
+          (CppArray.arr[l].posY = EvilArray.arr[i].posY) then
+          begin
+            EvilArray.arr[i].speed := 0;
+            if(EvilArray.arr[i].isDamaged) then
+            begin
+              CppArray.arr[l].addHp(-EvilArray.arr[i].damage);
+              EvilArray.arr[i].isDamaged := false
+            end;
+          end else
+          begin
+            EvilArray.arr[i].speed := 1;
+          end;
+        end;
+        for l := low(JavaArray.arr) to high(JavaArray.arr) do
+        begin
+          if(((JavaArray.arr[l].posX + map.getCubeSize - 1 = EvilArray.arr[i].posX)) or
+          (JavaArray.arr[l].posX + map.getCubeSize = EvilArray.arr[i].posX)) and
+          (javaArray.arr[l].posY = EvilArray.arr[i].posY) then
+          begin
+            EvilArray.arr[i].speed := 0;
+            if(EvilArray.arr[i].isDamaged) then
+            begin
+              JavaArray.arr[l].addHp(-EvilArray.arr[i].damage);
+              EvilArray.arr[i].isDamaged := false
+            end;
+          end;
+        end;
       end;
     end;
     if(EvilArray.arr[i].isDie) then
@@ -249,6 +296,22 @@ begin
     end;
     if(CppArray.arr[i].isDie) then CppArray.destroyAtIndex(i);
   end;
+  for i := low(JavaArray.arr) to high(JavaArray.arr) do
+  begin
+    renderRect(
+      JavaArray.arr[i].posY,
+      JavaArray.arr[i].posX,
+      map.getCubeSize,
+      map.getCubeSize,
+      CALIFORNIA
+    );
+    if(JavaArray.arr[i].isWorked) then
+    begin
+      money:= money+ JavaArray.arr[i].damage;
+      JavaArray.arr[i].isWorked := false;
+    end;
+    if(JavaArray.arr[i].isDie) then JavaArray.destroyAtIndex(i);
+  end;
 end;
 
 procedure TFormMain.timerSpawnerTimer(Sender: TObject);
@@ -262,7 +325,7 @@ procedure TFormMain.FormCreate(Sender: TObject);
   DocMain: TXMLDocument;}
 begin
   map := TMap.create(10,imgGame);
-  money := 30;
+  money := 50;
   {SysUtils.CreateDir(ExtractFilePath(Application.ExeName)+'save');
   ReadXMLFile(DocMain, ExtractFilePath(Application.ExeName)+'main.xml');
   IdNode := DocMain.DocumentElement.FindNode('save_id_counter');
@@ -271,6 +334,7 @@ begin
   DocMain.free;}
   EvilArray := _EvilArray_.create;
   CppArray := _CppArray_.create;
+  JavaArray := _JavaArray_.create;
 end;
 
 procedure TFormMain.FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState

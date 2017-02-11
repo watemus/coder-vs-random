@@ -35,7 +35,7 @@ constructor TPlus.create(f: TForm; py, px, size: Integer);
 begin
   inherited create(f, py, px, size);
   spawnPosX := posX;
-  damage := 3;
+  damage := 2;
 end;
 
 procedure TPlus.update(Sender: TObject);
