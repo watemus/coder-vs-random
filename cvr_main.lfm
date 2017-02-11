@@ -1,7 +1,7 @@
 object FormMain: TFormMain
-  Left = 352
+  Left = 216
   Height = 700
-  Top = 134
+  Top = 169
   Width = 1000
   Caption = 'Coder vs Random'
   ClientHeight = 700
@@ -48,13 +48,57 @@ object FormMain: TFormMain
     OnMouseMove = imgGameMouseMove
     OnMouseUp = imgGameMouseUp
   end
+  object pnlMenu: TPanel
+    Left = 0
+    Height = 704
+    Top = 0
+    Width = 1002
+    ClientHeight = 704
+    ClientWidth = 1002
+    TabOrder = 1
+    object btnStart: TButton
+      Left = 392
+      Height = 49
+      Top = 240
+      Width = 216
+      Caption = 'Start a game'
+      Color = 4277718
+      Font.Color = clCream
+      OnClick = btnStartClick
+      ParentFont = False
+      TabOrder = 0
+    end
+    object spinSize: TSpinEdit
+      Left = 496
+      Height = 27
+      Top = 304
+      Width = 122
+      MaxValue = 15
+      MinValue = 5
+      TabOrder = 1
+      Value = 5
+    end
+    object Label1: TLabel
+      Left = 392
+      Height = 24
+      Top = 304
+      Width = 87
+      Caption = 'Map size:'
+      Font.Color = clCream
+      Font.Height = -21
+      ParentColor = False
+      ParentFont = False
+    end
+  end
   object timerRender: TTimer
+    Enabled = False
     Interval = 10
     OnTimer = timerRenderTimer
     left = 24
     top = 8
   end
   object timerSpawner: TTimer
+    Enabled = False
     Interval = 5000
     OnTimer = timerSpawnerTimer
     left = 96

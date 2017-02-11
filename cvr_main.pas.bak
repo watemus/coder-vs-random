@@ -5,8 +5,8 @@ unit cvr_main;
 interface
 
 uses
-  Classes, SysUtils, FileUtil, Forms,
-  Controls, Graphics, Dialogs, ExtCtrls, StdCtrls,
+  Classes, SysUtils, FileUtil, DividerBevel, Forms,
+  Controls, Graphics, Dialogs, ExtCtrls, StdCtrls, Spin,
   {DOM, XMLRead, XMLWrite, XMLCfg, XMLUtils, XMLStreaming,}
   cvr_map, cvr_actor, cvr_evil, cvr_cpp, cvr_java, cvr_array;
 
@@ -19,11 +19,16 @@ type
   end;
 
   TFormMain = class(TForm)
+    btnStart: TButton;
     imgGame: TImage;
+    Label1: TLabel;
     lblPoints: TLabel;
+    pnlMenu: TPanel;
     pnlShop: TPanel;
+    spinSize: TSpinEdit;
     timerSpawner: TTimer;
     timerRender: TTimer;
+    procedure btnStartClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure imgGameMouseDown(Sender: TObject; Button: TMouseButton;
@@ -64,7 +69,7 @@ var
   cppArray: _CppArray_;
   javaArray: _JavaArray_;
 const
-  EVIL_SIZE: Integer = 5;
+  EVIL_SIZE: Integer = 4;
   LYNCH: TFlatColor = (RED: 108; GREEN: 122; BLUE: 137);
   WHITE_SMOKE: TFlatColor = (RED: 236; GREEN: 236; BLUE: 236);
   PUMICE: TFlatColor = (RED: 210; GREEN: 215; BLUE: 211);
@@ -206,7 +211,7 @@ begin
       formmain,
       random(map.sizeY),
       formmain.width,
-      EVIL_SIZE)
+      EVIL_SIZE + money div 100)
     );
     isSpawnEvil := false;
   end;
@@ -253,12 +258,14 @@ begin
               JavaArray.arr[l].addHp(-EvilArray.arr[i].damage);
               EvilArray.arr[i].isDamaged := false
             end;
-          end else
-          begin
-            EvilArray.arr[i].speed := 1;
           end;
         end;
       end;
+    end;
+    if(EvilArray.arr[i].posX = 0)then
+    begin
+      FormMain.OnCreate(FormMain);
+      exit();
     end;
     if(EvilArray.arr[i].isDie) then
     begin
@@ -327,7 +334,8 @@ procedure TFormMain.FormCreate(Sender: TObject);
   IdNode: TDOMNode;
   DocMain: TXMLDocument;}
 begin
-  map := TMap.create(10,imgGame);
+  pnlMenu.visible := true;
+  map := TMap.Create(5, imgGame);
   money := 50;
   {SysUtils.CreateDir(ExtractFilePath(Application.ExeName)+'save');
   ReadXMLFile(DocMain, ExtractFilePath(Application.ExeName)+'main.xml');
@@ -338,6 +346,14 @@ begin
   EvilArray := _EvilArray_.create;
   CppArray := _CppArray_.create;
   JavaArray := _JavaArray_.create;
+end;
+
+procedure TFormMain.btnStartClick(Sender: TObject);
+begin
+  pnlMenu.visible := false;
+  map.sizeY := StrToInt(spinSize.caption);
+  timerRender.enabled := true;
+  timerSpawner.enabled := true;
 end;
 
 procedure TFormMain.FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState
